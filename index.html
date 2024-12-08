@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Layers Example</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Сцена
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Создание слоев
+        const layer1 = new THREE.Layers();
+        const layer2 = new THREE.Layers();
+
+        // Создание объектов
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material1 = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const material2 = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+
+        const cube1 = new THREE.Mesh(geometry, material1);
+        cube1.layers.set(1); // Устанавливаем слой 1
+        scene.add(cube1);
+
+        const cube2 = new THREE.Mesh(geometry, material2);
+        cube2.position.x = 2;
+        cube2.layers.set(2); // Устанавливаем слой 2
+        scene.add(cube2);
+
+        // Освещение
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        // Позиция камеры
+        camera.position.z = 5;
+
+        // Анимация
+        function animate() {
+            requestAnimationFrame(animate);
+            cube1.rotation.x += 0.01;
+            cube1.rotation.y += 0.01;
+            cube2.rotation.x += 0.01;
+            cube2.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
